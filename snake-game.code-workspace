@@ -1,0 +1,46 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.autoSave": "onFocusChange",
+		"editor.minimap.enabled": false,
+
+		"terminal.integrated.fontFamily": "CaskaydiaCove Nerd Font",
+
+		"python.terminal.activateEnvironment": true,
+
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			"**/__pycache__": true
+		},
+
+		"workbench.colorCustomizations": {
+			"activityBar.activeBackground": "#6894f4",
+			"activityBar.activeBorder": "#b20d41",
+			"activityBar.background": "#6894f4",
+			"activityBar.foreground": "#15202b",
+			"activityBar.inactiveForeground": "#15202b99",
+			"activityBarBadge.background": "#b20d41",
+			"activityBarBadge.foreground": "#e7e7e7",
+			"sash.hoverBorder": "#6894f4",
+			"statusBar.background": "#3872f1",
+			"statusBar.foreground": "#e7e7e7",
+			"statusBarItem.hoverBackground": "#6894f4",
+			"statusBarItem.remoteBackground": "#3872f1",
+			"statusBarItem.remoteForeground": "#e7e7e7",
+			"titleBar.activeBackground": "#3872f1",
+			"titleBar.activeForeground": "#e7e7e7",
+			"titleBar.inactiveBackground": "#3872f199",
+			"titleBar.inactiveForeground": "#e7e7e799"
+		},
+		"peacock.color": "#3872f1"
+	}
+}
