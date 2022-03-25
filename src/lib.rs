@@ -2,5 +2,11 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub fn greet(name: &str) {
-    println!("Hi there {}", name);
+    let message = format!("Hi there {}", name);
+    alert(&message);
+}
+
+#[wasm_bindgen]
+extern {
+    pub fn alert(message: &str);
 }
