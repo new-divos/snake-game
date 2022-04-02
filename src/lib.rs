@@ -15,6 +15,7 @@ pub enum Direction {
     Left
 }
 
+#[derive(Clone, Copy, PartialEq)]
 struct SnakeCell(usize);
 
 struct Snake {
@@ -41,6 +42,7 @@ pub struct World {
     width: usize,
     size: usize,
     snake: Snake,
+    next_cell: Option<SnakeCell>,
 }
 
 #[wasm_bindgen]
@@ -50,6 +52,7 @@ impl World {
             width,
             size: width * width,
             snake: Snake::new(snake_idx, snake_size),
+            next_cell: None,
         }
     }
 
@@ -76,6 +79,15 @@ impl World {
     }
 
     pub fn change_shake_dir(&mut self, direction: Direction) {
+        let next_cell = self.next_snake_cell(
+            self.snake_head_idx(), &direction
+        );
+
+        if self.snake.body[1] == next_cell {
+            return;
+        }
+
+        self.next_cell = Some(next_cell);
         self.snake.direction = direction;
     }
 
@@ -84,14 +96,26 @@ impl World {
             return
         }
 
-        let next_cell = self.next_snake_cell(self.snake_head_idx());
-        self.snake.body[0] = next_cell;
+        for i in (1..self.snake.body.len()).rev() {
+            self.snake.body[i] = self.snake.body[i - 1];
+        }
+
+        if let Some(next_cell) = self.next_cell {
+            self.snake.body[0] = next_cell;
+            self.next_cell = None;
+        } else {
+            self.snake.body[0] = self.next_snake_cell(
+                self.snake_head_idx(), &self.snake.direction
+            );
+        }
     }
 
-    fn next_snake_cell(&self, snake_idx: usize) -> SnakeCell {
+    fn next_snake_cell(
+        &self, snake_idx: usize, direction: &Direction
+    ) -> SnakeCell {
         let row = snake_idx / self.width;
 
-        match self.snake.direction {
+        match direction {
             Direction::Up => {
                 let treshold = snake_idx - row * self.width;
                 if snake_idx == treshold {
