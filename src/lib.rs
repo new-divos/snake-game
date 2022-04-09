@@ -6,6 +6,11 @@ use js_sys::Uint32Array;
 #[global_allocator]
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
+#[wasm_bindgen(module = "/www/utils/rnd.js")]
+extern {
+    fn rnd(max: usize) -> usize;
+}
+
 #[wasm_bindgen]
 #[derive(PartialEq)]
 pub enum Direction {
@@ -43,21 +48,30 @@ pub struct World {
     size: usize,
     snake: Snake,
     next_cell: Option<SnakeCell>,
+    reward_cell: usize,
 }
 
 #[wasm_bindgen]
 impl World {
     pub fn new(width: usize, snake_idx: usize, snake_size: usize) -> World {
+        let size = width * width;
+        let reward_cell = rnd(size);
+
         World {
             width,
-            size: width * width,
+            size,
             snake: Snake::new(snake_idx, snake_size),
             next_cell: None,
+            reward_cell,
         }
     }
 
     pub fn width(&self) -> usize {
         self.width
+    }
+
+    pub fn reward_cell(&self) -> usize {
+        self.reward_cell
     }
 
     pub fn snake_head_idx(&self) -> usize {

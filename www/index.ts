@@ -1,11 +1,12 @@
 import init, { Direction, World } from "snake-game";
+import { rnd } from "./utils/rnd"
 
 init().then(_ => {
     const CELL_SIZE = 20;
     const WORLD_WIDTH = 16;
     const SNAKE_SIZE = 3;
 
-    const snakeSpawnIdx = Date.now() % (WORLD_WIDTH * WORLD_WIDTH);
+    const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);
 
     const world = World.new(WORLD_WIDTH, snakeSpawnIdx, SNAKE_SIZE);
     const canvas = <HTMLCanvasElement> document.getElementById("snake-canvas");
@@ -50,6 +51,22 @@ init().then(_ => {
         ctx.stroke();
     }
 
+    function drawReward() {
+        const idx = world.reward_cell();
+        const col = idx % world.width();
+        const row = Math.floor(idx / world.width());
+
+        ctx.beginPath();
+        ctx.fillStyle = "#FF0000";
+        ctx.fillRect(
+            col * CELL_SIZE, 
+            row * CELL_SIZE, 
+            CELL_SIZE, 
+            CELL_SIZE
+        );
+        ctx.stroke();
+    }
+
     function drawSnake() {
         const snakeCells = world.snake_cells();
         snakeCells.forEach(cellIdx => {
@@ -73,6 +90,7 @@ init().then(_ => {
     function paint() {
         drawWorld();
         drawSnake();
+        drawReward();
     }
 
     function update() {
