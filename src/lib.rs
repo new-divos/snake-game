@@ -54,20 +54,24 @@ pub struct World {
 #[wasm_bindgen]
 impl World {
     pub fn new(width: usize, snake_idx: usize, snake_size: usize) -> World {
+        let snake = Snake::new(snake_idx, snake_size);
         let size = width * width;
-        let reward_cell = rnd(size);
 
         World {
             width,
             size,
-            snake: Snake::new(snake_idx, snake_size),
+            reward_cell: World::gen_reward_cell(size, &snake.body),
+            snake,
             next_cell: None,
-            reward_cell,
         }
     }
 
     pub fn width(&self) -> usize {
         self.width
+    }
+
+    pub fn size(&self) -> usize {
+        self.size
     }
 
     pub fn reward_cell(&self) -> usize {
@@ -93,7 +97,7 @@ impl World {
     }
 
     pub fn change_shake_dir(&mut self, direction: Direction) {
-        let next_cell = self.next_snake_cell(
+        let next_cell = self.gen_next_snake_cell(
             self.snake_head_idx(), &direction
         );
 
@@ -118,13 +122,23 @@ impl World {
             self.snake.body[0] = next_cell;
             self.next_cell = None;
         } else {
-            self.snake.body[0] = self.next_snake_cell(
+            self.snake.body[0] = self.gen_next_snake_cell(
                 self.snake_head_idx(), &self.snake.direction
             );
         }
+
+        if self.reward_cell == self.snake_head_idx() {
+            if self.snake.body.len() < self.size {
+                self.reward_cell = World::gen_reward_cell(self.size, &self.snake.body);
+            } else {
+                self.reward_cell += self.size + 1;
+            }
+
+            self.snake.body.push(SnakeCell(self.snake.body[1].0));
+        }
     }
 
-    fn next_snake_cell(
+    fn gen_next_snake_cell(
         &self, snake_idx: usize, direction: &Direction
     ) -> SnakeCell {
         let row = snake_idx / self.width;
@@ -166,6 +180,19 @@ impl World {
                 }
             }
         }
+    }
+
+    fn gen_reward_cell(max: usize, snake_body: &Vec<SnakeCell>) -> usize {
+        let mut reward_cell;
+
+        loop {
+            reward_cell = rnd(max);
+            if !snake_body.contains(&SnakeCell(reward_cell)) {
+                break;
+            }
+        }
+
+        reward_cell
     }
 }
 

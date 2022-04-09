@@ -53,18 +53,23 @@ init().then(_ => {
 
     function drawReward() {
         const idx = world.reward_cell();
-        const col = idx % world.width();
-        const row = Math.floor(idx / world.width());
 
-        ctx.beginPath();
-        ctx.fillStyle = "#FF0000";
-        ctx.fillRect(
-            col * CELL_SIZE, 
-            row * CELL_SIZE, 
-            CELL_SIZE, 
-            CELL_SIZE
-        );
-        ctx.stroke();
+        if (idx > world.size()) {
+            alert("You Won!");
+        } else {
+            const col = idx % world.width();
+            const row = Math.floor(idx / world.width());    
+
+            ctx.beginPath();
+            ctx.fillStyle = "#FF0000";
+            ctx.fillRect(
+                col * CELL_SIZE, 
+                row * CELL_SIZE, 
+                CELL_SIZE, 
+                CELL_SIZE
+            );
+            ctx.stroke();    
+        }
     }
 
     function drawSnake() {
