@@ -14,6 +14,7 @@
   "dependencies": {
     "copy-webpack-plugin": "^10.2.4",
     "snake-game": "file:../pkg",
+    "snake-game-server": "file:..",
     "ts-loader": "^9.2.8",
     "typescript": "^4.6.3",
     "webpack": "^5.70.0",
